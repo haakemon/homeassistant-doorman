@@ -1,0 +1,9 @@
+tests/secrets.py
+tests/*.txt
+*.log
+
+__pycache__/
+*.pyc
+
+.vscode/
+*.code-workspace

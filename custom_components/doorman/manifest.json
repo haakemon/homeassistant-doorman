@@ -1,7 +1,7 @@
 {
   "domain": "doorman",
   "name": "Yale Doorman",
-  "documentation": "https://github.com/espenfjo/homeassistant-doorman",
+  "documentation": "https://github.com/jkCXf9X4/homeassistant-doorman",
   "requirements": [],
   "dependencies": [],
   "codeowners": []
