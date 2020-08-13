@@ -1,7 +1,7 @@
 import unittest
 from ddt import ddt, unpack, data
 
-from custom_components.doorman.yale.expiration_data import ExpirationData
+from custom_components.doorman.yale.expiration_wrapper import ExpirationWrapper
 from datetime import datetime
 import time
 
@@ -9,7 +9,7 @@ import time
 class ExpirationDataTestMethod(unittest.TestCase):
 
     def test_generating_time_stamp(self):
-        e_data = ExpirationData("test", None, 1)
+        e_data = ExpirationWrapper("test", None, 1)
         assert(e_data.timestamp != None)
 
     @data(("test", None, 1, 0, True),
@@ -19,10 +19,9 @@ class ExpirationDataTestMethod(unittest.TestCase):
     @unpack
     def test_is_active_true(self, _data, timestamp, validity_time, buffer, expected_result):
 
-        e_data = ExpirationData(_data, validity_time, timestamp, buffer=buffer)
+        e_data = ExpirationWrapper(_data, validity_time, timestamp, buffer=buffer)
 
         self.assertEqual(e_data.is_active, expected_result)
-
 
 
 if __name__ == '__main__':

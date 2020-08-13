@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import copy
 import logging
 
 
@@ -55,5 +56,4 @@ class ExpirationWrapper():
         if self.is_active:
             return self._data
         else:
-            self._logger.debug("DataNotValidException raised in Expiration data")
-            raise DataNotValidException()
+            return None
