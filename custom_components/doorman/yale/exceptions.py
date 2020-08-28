@@ -16,3 +16,4 @@ class UpdateException(Exception):
 
 class DataNotValidException(Exception):
     pass
+

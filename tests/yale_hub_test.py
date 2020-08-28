@@ -27,7 +27,7 @@ class YaleHubTestData(unittest.TestCase):
     def test_get_states_data(self):
         self._LOGGER.info("Test: test_get_states_data")
 
-        state_data = self.yale_hub.state_data.data
+        state_data = self.yale_hub.state.data
 
         with open('tests/yale_hub_states_data2.txt', 'w') as outfile:
             json.dump(state_data, outfile)

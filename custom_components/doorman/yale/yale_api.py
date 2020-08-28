@@ -2,9 +2,9 @@ import logging
 import requests
 
 from custom_components.doorman.log.log_wrapper import logger
-from custom_components.doorman.yale.exceptions import HttpResponseException, LoginException
-from custom_components.doorman.yale.expiration_wrapper import ExpirationWrapper
-from custom_components.doorman.yale.update_wrapper import UpdateWrapper
+from custom_components.doorman.yale.exceptions import HttpResponseException, LoginException, UpdateException
+from custom_components.doorman.yale.updateable import Updateable
+
 
 from datetime import datetime
 
@@ -26,7 +26,7 @@ class YaleApi:
         self.username = username
         self.password = password
 
-        self.token = UpdateWrapper(self.get_token(), update_fn=self.get_token, access_fn=lambda x: x.data)
+        self.token = Token(self)
 
     @logger
     def login(self):
@@ -35,21 +35,23 @@ class YaleApi:
             data={"grant_type": "password", "username": self.username, "password": self.password},
             headers={"Accept": "application/json", "Authorization": f"Basic {self.YALE_AUTH_TOKEN}"})
 
-    @logger
+    # @logger
     def get_state_data(self):
-        return self.get(
+        json_message = self.get(
             self.STATE_URL,
             data="",
             headers=YaleApi.get_token_auth_header(self.token.data))
+        return self.extract_message(json_message)
 
-    @logger
+    # @logger
     def get_state_history_data(self):
-        return self.get(
+        json_message = self.get(
             self.STATE_HISTORY_URL,
             data={"page_num": 1, "set_utc": 1},
             headers=YaleApi.get_token_auth_header(self.token.data))
+        return self.extract_message(json_message)
 
-    @logger
+    # @logger
     def unlock(self, area, zone, pincode):
         # area=1&zone=1&pincode=xxxxxxxx
         return self.post(
@@ -57,7 +59,7 @@ class YaleApi:
             data={"area": area, "zone": zone, "pincode": pincode},
             headers=YaleApi.get_token_auth_header(self.token.data),)
 
-    @logger
+    # @logger
     def lock(self, area, zone):
         # area=1&zone=1&device_type=device_type.door_lock&request_value=1
         return requests.post(
@@ -81,11 +83,9 @@ class YaleApi:
         if response.status_code == 200:
             return
         elif response.status_code == 401:
-            error_text = f"Invalid credentials given: {response.text}"
-            raise LoginException(error_text)
+            raise LoginException(f"Invalid credentials given: {response.text}")
         else:
-            error_text = f"Unknown error retrieving http response: {response.text}"
-            raise HttpResponseException(error_text)
+            raise HttpResponseException(f"Unknown error retrieving http response: {response.text}")
 
     def jsonify(self, response: requests.Response):
         try:
@@ -94,14 +94,24 @@ class YaleApi:
         except Exception as error:
             raise Exception(f"Failed to convert to jason, {error}")
 
+    def extract_message(self, json):
+        status = json["message"]
+        if status != "OK!":
+            raise Exception(f"Status is not OK: {status}")
+        return json.get("data")
+
     def get_token_auth_header(token):
         return {"Authorization": f"Bearer {token}"}
 
-    def get_token(self) -> ExpirationWrapper:
-        self._LOGGER.debug("get_access_token")
-        login_json = self.login()
 
-        token_data = ExpirationWrapper(
-            login_json["access_token"],
-            login_json["expires_in"])
-        return token_data
+class Token(Updateable):
+    def __init__(self, yale_api):
+        super().__init__(None, -1)
+
+        self.yale_api = yale_api
+
+    def update(self):
+        login_json = self.yale_api.login()
+        token = login_json["access_token"]
+        self.time_valid = login_json["expires_in"]
+        return token

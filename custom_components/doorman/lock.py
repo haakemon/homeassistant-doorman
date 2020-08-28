@@ -61,6 +61,5 @@ class Doorman(LockEntity):
         _LOGGER.debug(f"Unlock kwargs: {kwargs}")
         self.yale_door.unlock(kwargs.get('code', ""))
 
-    # handled inside yalehub, not optimal but works for now
     def update(self):
-        pass
+        self.yale_door.update_state()

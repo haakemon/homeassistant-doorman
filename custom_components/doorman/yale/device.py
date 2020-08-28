@@ -9,9 +9,5 @@ class Device():
         self.device_id = device_id
         self.area = area
         self.zone = zone
-        self._name = name
+        self.name = name
 
-    @property
-    def name(self):
-        """Return the name of the device."""
-        return self._name

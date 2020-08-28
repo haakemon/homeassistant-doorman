@@ -30,16 +30,14 @@ class Door(Device):
             zone=zone)
 
         self._LOGGER = logging.getLogger(__name__)
+        self.state = Door.FAILED_STATE
         self.report_ids = []
 
     @property
-    def state(self):
-        data = self.yale_hub.state_data.data
-        devices = data.get("device_status")
-        for device in devices:
-            if self.device_id == device.get("device_id"):
-                state = device.get("status_open")[0]
-                return state
+    def update_state(self):
+        data = self.yale_hub.get_state(self.device_id)
+        state = data.get("status_open")[0]
+        self.state = state
 
     @property
     def is_locked(self):
@@ -48,8 +46,10 @@ class Door(Device):
 
     def lock(self):
         """Lock the device."""
-        self.yale_hub.yale_api.lock(self.area, self.zone)
+        if self.is_locked is False:
+            self.yale_hub.yale_api.lock(self.area, self.zone)
 
     def unlock(self, pincode):
         """Unlock the device."""
-        self.yale_hub.yale_api.unlock(self.area, self.zone, pincode)
+        if self.is_locked is True:
+            self.yale_hub.yale_api.unlock(self.area, self.zone, pincode)
