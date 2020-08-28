@@ -47,7 +47,7 @@ class YaleHub:
         data = self.state.data
         devices = data.get("device_status")
         state = [i for i in devices if i.get("device_id") == device_id]
-        if len(state == 1):
+        if len(state) == 1:
             return state[0]
         raise Exception(f"State was not found for id: {device_id}")
 

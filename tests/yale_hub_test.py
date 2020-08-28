@@ -33,6 +33,13 @@ class YaleHubTestData(unittest.TestCase):
             json.dump(state_data, outfile)
         self.assertTrue(True)
 
+    def test_get_state_from_id(self):
+        state_data = self.yale_hub.get_state("RF:0042e212")
+
+        with open('tests/yale_hub_states_data3.txt', 'w') as outfile:
+            json.dump(state_data, outfile)
+        self.assertTrue(True)
+
     def test_validate_devices(self):
         devices = self.yale_hub.devices
 

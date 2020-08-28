@@ -33,7 +33,6 @@ class Door(Device):
         self.state = Door.FAILED_STATE
         self.report_ids = []
 
-    @property
     def update_state(self):
         data = self.yale_hub.get_state(self.device_id)
         state = data.get("status_open")[0]
