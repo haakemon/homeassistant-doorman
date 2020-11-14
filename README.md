@@ -1,7 +1,9 @@
 # homeassistant-doorman
 
 Fork of https://github.com/espenfjo/homeassistant-doorman
+Major rewrite
 
+Home assistant addon
 Custom component for the Yale Doorman lock(s) via the Yale Smart HUB.
 
 Supports:
