@@ -1,7 +1,7 @@
 # homeassistant-doorman
 
-Fork of https://github.com/espenfjo/homeassistant-doorman
-Major rewrite
+Major rewrite of https://github.com/espenfjo/homeassistant-doorman
+
 
 Home assistant addon
 Custom component for the Yale Doorman lock(s) via the Yale Smart HUB.
@@ -12,7 +12,7 @@ Supports:
  * Lock
  
 Unsupported:
- * Unlock is integrated but pincode need to be sent as a kwarg "code" to the unlock function for it to work
+ * Unlock is integrated but pincode need to be sent as a kwarg "code" to the unlock function for it to work, support for function needs to be integrated into home assistant
 
 
 Tested with the V2N lock.
