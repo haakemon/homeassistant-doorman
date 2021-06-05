@@ -2,7 +2,9 @@
   "domain": "doorman",
   "name": "Yale Doorman",
   "documentation": "https://github.com/jkCXf9X4/homeassistant-doorman",
+  "version": "0.0.1",
   "requirements": [],
   "dependencies": [],
-  "codeowners": []
+  "codeowners": [],
+  "iot_class": "cloud_polling"
 }
