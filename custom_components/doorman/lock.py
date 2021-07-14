@@ -31,7 +31,12 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
     yale_hub = YaleHub(username=username, password=password, zone_id=1)
 
-    doormans = [Doorman(i) for i in yale_hub.devices]
+    doormans = []
+
+    for device in yale_hub.devices:
+        if isinstance(device, Door):
+            doormans.append(Doorman(device))
+
     add_entities(doormans)
 
 
