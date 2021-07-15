@@ -31,16 +31,18 @@ class YaleHub:
         new_devices = []
         devices = data.get("device_status")
         for device in devices:
-            yale_device = DeviceFactory.Create(
-                yale_hub=self,
-                device_id=device.get("device_id"),
-                device_type=device.get("type"),
-                name=device.get("name"),
-                area=device.get("area"),
-                zone=device.get("no"))
+            dev_type=device.get("type")
+            if dev_type == "device_type.door_lock":
+                yale_device = DeviceFactory.Create(
+                    yale_hub=self,
+                    device_id=device.get("device_id"),
+                    device_type=dev_type,
+                    name=device.get("name"),
+                    area=device.get("area"),
+                    zone=device.get("no"))
 
-            self._LOGGER.info(f"Adding device {yale_device.name}")
-            new_devices.append(yale_device)
+                self._LOGGER.info(f"Adding device {yale_device.name}")
+                new_devices.append(yale_device)
         return new_devices
 
     def get_state(self, device_id):
